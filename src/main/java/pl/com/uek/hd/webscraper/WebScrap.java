@@ -4,13 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlHeading3;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.sql.SQLOutput;
 import java.util.List;
 
 public class WebScrap {
@@ -34,11 +32,11 @@ public class WebScrap {
             List<HtmlElement> items = htmlPage.getByXPath("//li[@class='classPresale']");
             if (!items.isEmpty()) {
                 for (HtmlElement htmlItem : items) {
-                    HtmlAnchor itemAnchor = (HtmlAnchor) htmlItem.getFirstByXPath(".//div[@class='book-info-middle']/h3/a");
-                    HtmlAnchor itemAuthor = (HtmlAnchor) htmlItem.getFirstByXPath(".//p[@class='author']/a");
-                    HtmlElement spanPrice = (HtmlElement) htmlItem.getFirstByXPath(".//p[@class='price price-add']/a/span");
+                    HtmlAnchor itemAnchor = htmlItem.getFirstByXPath(".//div[@class='book-info-middle']/h3/a");
+                    HtmlAnchor itemAuthor = htmlItem.getFirstByXPath(".//p[@class='author']/a");
+                    HtmlElement spanPrice = htmlItem.getFirstByXPath(".//p[@class='price price-add']/a/span");
 
-                    String itemPrice = spanPrice.asText().replace(" zł", "");
+                    String itemPrice = spanPrice == null ? "0.0" : StringUtils.substring(spanPrice.asText(),0,spanPrice.asText().length()-3);
 
                     Item item = new Item();
                     item.setName(itemAnchor.asText());
@@ -51,44 +49,6 @@ public class WebScrap {
 
                     System.out.println(jsonString);
                 }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // example
-    private static void newyorkCraiglistExample() {
-        String searchQuery = "Iphone 6";
-        String baseUrl = "https://newyork.craigslist.org/";
-        WebClient webClient = new WebClient();
-        webClient.getOptions().setCssEnabled(false);
-        webClient.getOptions().setJavaScriptEnabled(false);
-
-        try {
-            String searchUrl = baseUrl + "search/sss?sort=rel&query=" + URLEncoder.encode(searchQuery, "UTF-8");
-            HtmlPage htmlPage = webClient.getPage(searchUrl);
-
-            List<HtmlElement> items = htmlPage.getByXPath("//li[@class='result-row']");
-            if (!items.isEmpty()) {
-                for (HtmlElement htmlItem : items) {
-                    HtmlAnchor itemAnchor = (HtmlAnchor) htmlItem.getFirstByXPath(".//p[@class='result-info']/a");
-                    HtmlElement spanPrice = (HtmlElement) htmlItem.getFirstByXPath(".//a/span[@class='result-price']");
-
-                    String itemPrice = spanPrice == null ? "0.0" : spanPrice.asText();
-
-                    Item item = new Item();
-                    item.setName(itemAnchor.asText());
-                    item.setPrice(new BigDecimal(itemPrice.replace("$", "")));
-                    item.setUrl(baseUrl + itemAnchor.getHrefAttribute());
-
-                    ObjectMapper mapper = new ObjectMapper();
-                    String jsonString = mapper.writeValueAsString(item);
-
-                    System.out.println(jsonString);
-                }
-            } else {
-                System.out.println("No items found!");
             }
         } catch (IOException e) {
             e.printStackTrace();

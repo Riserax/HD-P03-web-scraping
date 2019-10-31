@@ -3,6 +3,8 @@ package pl.com.uek.hd.webscraper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
@@ -11,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Getter
+@Setter
 public class Transformator {
     private List<HtmlElement> htmlItems;
     private Set<Item> itemsPojo;
@@ -23,6 +27,12 @@ public class Transformator {
     }
 
 
+    public void printTransformedItems(){
+        for(String node : transformedItems){
+            System.out.println(node);
+        }
+
+    }
 
     public void transform(){
         try {

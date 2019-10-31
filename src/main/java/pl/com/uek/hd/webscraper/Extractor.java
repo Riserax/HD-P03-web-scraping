@@ -25,7 +25,7 @@ public class Extractor {
     private String[] booksUnderCategories;
     private String finalUrl;
     private List<HtmlElement> htmlItems;
-    private List<String> extractedBooksNodes;
+    private List<String> extractedItemsNodes;
 
 
     private String createFinalUrl(){
@@ -48,11 +48,8 @@ public class Extractor {
 
                     ObjectMapper objectMapper = new ObjectMapper();
 
-                    extractedBooksNodes.add(objectMapper.writeValueAsString(temporaryItem));
+                    extractedItemsNodes.add(objectMapper.writeValueAsString(temporaryItem));
 
-                }
-                for(String node : extractedBooksNodes){
-                    System.out.println(node);
                 }
             }
         } catch (IOException e) {
@@ -60,12 +57,19 @@ public class Extractor {
         }
     }
 
+    public void printExtractedBooks(){
+        for(String node : extractedItemsNodes){
+            System.out.println(node);
+        }
+
+    }
+
     public Extractor(String mainUrl, String categoriesBooks, String[] booksUnderCategories){
         this.mainUrl = mainUrl;
         this.categoriesBooks = categoriesBooks;
         this.booksUnderCategories = booksUnderCategories;
         this.htmlItems = new ArrayList<>();
-        this.extractedBooksNodes = new ArrayList<>();
+        this.extractedItemsNodes = new ArrayList<>();
 
     }
 

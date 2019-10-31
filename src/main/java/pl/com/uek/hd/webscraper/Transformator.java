@@ -34,8 +34,12 @@ public class Transformator {
                 String itemPrice = spanPrice == null ? "0.0" : StringUtils.substring(spanPrice.asText(), 0, spanPrice.asText().length() - 3);
 
                 Item item = new Item();
-                item.setName(itemAnchor.asText());
-                item.setAuthor(itemAuthor.asText());
+                Book book = new Book();
+
+                book.setName(itemAnchor.asText());
+                book.setAuthor(itemAuthor.asText());
+
+                item.setBook(book);
                 item.setPrice(new BigDecimal(itemPrice));
                 item.setUrl(itemAnchor.getHrefAttribute());
                 itemsPojo.add(item);

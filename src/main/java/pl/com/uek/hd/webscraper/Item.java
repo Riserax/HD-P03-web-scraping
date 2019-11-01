@@ -5,12 +5,14 @@ import java.util.List;
 
 public class Item {
    private Book book;
+   private boolean bookAvailable;
+   private BigDecimal bookPriceOld;
+   private BigDecimal bookPrice;
+   private boolean eBookAvailable;
+   private BigDecimal eBookPriceOld;
+   private BigDecimal eBookPrice;
    private List<String> tags;
    private BigDecimal overallRate;
-   private BigDecimal price;
-   private boolean eBookAvailable;
-   private BigDecimal eBookPrice;
-   private String url;
    private String description;
    private String aboutAuthor;
    private List<Opinion> opinions;
@@ -18,7 +20,6 @@ public class Item {
    private List<Review> reviews;
    private Integer reviewsNumber;
    private List<String> categories;
-//   private String tableOfContents; // nie wiem czy jestesmy w stanie i czy jest sens
 
    public Book getBook() {
       return book;
@@ -26,6 +27,54 @@ public class Item {
 
    public void setBook(Book book) {
       this.book = book;
+   }
+
+   public boolean isBookAvailable() {
+      return bookAvailable;
+   }
+
+   public void setBookAvailable(boolean bookAvailable) {
+      this.bookAvailable = bookAvailable;
+   }
+
+   public BigDecimal getBookPriceOld() {
+      return bookPriceOld;
+   }
+
+   public void setBookPriceOld(BigDecimal bookPriceOld) {
+      this.bookPriceOld = bookPriceOld;
+   }
+
+   public BigDecimal getBookPrice() {
+      return bookPrice;
+   }
+
+   public void setBookPrice(BigDecimal bookPrice) {
+      this.bookPrice = bookPrice;
+   }
+
+   public boolean isEBookAvailable() {
+      return eBookAvailable;
+   }
+
+   public void setEBookAvailable(boolean eBookAvailable) {
+      this.eBookAvailable = eBookAvailable;
+   }
+
+   public BigDecimal getEBookPriceOld() {
+      return eBookPriceOld;
+   }
+
+   public void setEBookPriceOld(BigDecimal eBookPriceOld) {
+      this.eBookPriceOld = eBookPriceOld;
+   }
+
+   public BigDecimal getEBookPrice() {
+      return eBookPrice;
+   }
+
+   public void setEBookPrice(BigDecimal eBookPrice) {
+      this.eBookPrice = eBookPrice;
    }
 
    public List<String> getTags() {
@@ -42,38 +91,6 @@ public class Item {
 
    public void setOverallRate(BigDecimal overallRate) {
       this.overallRate = overallRate;
-   }
-
-   public BigDecimal getPrice() {
-      return price;
-   }
-
-   public void setPrice(BigDecimal price) {
-      this.price = price;
-   }
-
-   public boolean iseBookAvailable() {
-      return eBookAvailable;
-   }
-
-   public void seteBookAvailable(boolean eBookAvailable) {
-      this.eBookAvailable = eBookAvailable;
-   }
-
-   public BigDecimal geteBookPrice() {
-      return eBookPrice;
-   }
-
-   public void seteBookPrice(BigDecimal eBookPrice) {
-      this.eBookPrice = eBookPrice;
-   }
-
-   public String getUrl() {
-      return url;
-   }
-
-   public void setUrl(String url) {
-      this.url = url;
    }
 
    public String getDescription() {

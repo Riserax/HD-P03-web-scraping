@@ -1,5 +1,6 @@
 package pl.com.uek.hd.webscraper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -22,35 +23,39 @@ public class Transformator {
         this.transformedItems = new ArrayList<>();
     }
 
-
-
     public void transform(){
-        try {
-            for (HtmlElement htmlItem : htmlItems) {
-                HtmlAnchor itemAnchor = htmlItem.getFirstByXPath(".//div[@class='book-info-middle']/h3/a");
-                HtmlAnchor itemAuthor = htmlItem.getFirstByXPath(".//p[@class='author']/a");
-                HtmlElement spanPrice = htmlItem.getFirstByXPath(".//p[@class='price price-add']/a/span");
-
-                String itemPrice = spanPrice == null ? "0.0" : StringUtils.substring(spanPrice.asText(), 0, spanPrice.asText().length() - 3);
-
-                Item item = new Item();
-                Book book = new Book();
-
-                book.setName(itemAnchor.asText());
-                book.setAuthor(itemAuthor.asText());
-
-                item.setBook(book);
-                item.setPrice(new BigDecimal(itemPrice));
-                item.setUrl(itemAnchor.getHrefAttribute());
-                itemsPojo.add(item);
-
-                ObjectMapper om = new ObjectMapper();
-                String jsonString = om.writeValueAsString(item);
-                transformedItems.add(jsonString);
-
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            for (HtmlElement htmlItem : htmlItems) {
+//                HtmlAnchor bookName = htmlItem.getFirstByXPath(".//div[@class='book-info-middle']/h3/a");
+//                HtmlAnchor bookAuthor = htmlItem.getFirstByXPath(".//p[@class='author']/a");
+//                HtmlElement bookPrice = htmlItem.getFirstByXPath(".//p[@class='book-price']/span");
+//                HtmlAnchor bookPublisher = htmlItem.getFirstByXPath(".//div[@class='select_druk']/dd/a");
+//                HtmlElement bookPages = htmlItem.getFirstByXPath(".//dd[@class='select_druk select_bundle']");
+//                HtmlElement bookCover = htmlItem.getFirstByXPath(".//dl[@class='info']/dd[last()]");
+//                HtmlAnchor bookOrigTitle = htmlItem.getFirstByXPath(".//div[@id='section6']/dl/dd[1]/a");
+//
+//                boolean bookAvailable = !bookPrice.asText().equals("niedostępna");
+//                String price = bookAvailable ? "0.0" : StringUtils.substring(bookPrice.asText(), 0, bookPrice.asText().length() - 3);
+//
+//                Book book = new Book();
+//                book.setTitle(bookName.asText());
+//                book.setAuthor(bookAuthor.asText());
+//                book.setPublisher(bookPublisher.asText());
+//                book.setNumberOfPages(new Integer(bookPages.asText()));
+//                book.setCover(bookAvailable ? bookCover.asText() : null);
+//                book.setOriginalTitle(bookOrigTitle.asText());
+//
+//                Item item = new Item();
+//                item.setBook(book);
+//                item.setBookPrice(new BigDecimal(price));
+//                itemsPojo.add(item);
+//
+//                ObjectMapper om = new ObjectMapper();
+//                String jsonString = om.writeValueAsString(item);
+//                transformedItems.add(jsonString);
+//            }
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
     }
 }

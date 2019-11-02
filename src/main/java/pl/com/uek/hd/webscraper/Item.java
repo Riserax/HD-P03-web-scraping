@@ -12,13 +12,14 @@ public class Item {
    private BigDecimal eBookPriceOld;
    private BigDecimal eBookPrice;
    private List<String> tags;
-   private BigDecimal overallRate;
    private String description;
    private String aboutAuthor;
-   private List<Opinion> opinions;
    private Integer opinionsNumber;
-   private List<Review> reviews;
+   private BigDecimal overallRate;
+   private List<String> rates;
+   private List<Opinion> opinions;
    private Integer reviewsNumber;
+   private List<Review> reviews;
    private List<String> categories;
 
    public Book getBook() {
@@ -53,27 +54,27 @@ public class Item {
       this.bookPrice = bookPrice;
    }
 
-   public boolean isEBookAvailable() {
+   public boolean iseBookAvailable() {
       return eBookAvailable;
    }
 
-   public void setEBookAvailable(boolean eBookAvailable) {
+   public void seteBookAvailable(boolean eBookAvailable) {
       this.eBookAvailable = eBookAvailable;
    }
 
-   public BigDecimal getEBookPriceOld() {
+   public BigDecimal geteBookPriceOld() {
       return eBookPriceOld;
    }
 
-   public void setEBookPriceOld(BigDecimal eBookPriceOld) {
+   public void seteBookPriceOld(BigDecimal eBookPriceOld) {
       this.eBookPriceOld = eBookPriceOld;
    }
 
-   public BigDecimal getEBookPrice() {
+   public BigDecimal geteBookPrice() {
       return eBookPrice;
    }
 
-   public void setEBookPrice(BigDecimal eBookPrice) {
+   public void seteBookPrice(BigDecimal eBookPrice) {
       this.eBookPrice = eBookPrice;
    }
 
@@ -83,14 +84,6 @@ public class Item {
 
    public void setTags(List<String> tags) {
       this.tags = tags;
-   }
-
-   public BigDecimal getOverallRate() {
-      return overallRate;
-   }
-
-   public void setOverallRate(BigDecimal overallRate) {
-      this.overallRate = overallRate;
    }
 
    public String getDescription() {
@@ -109,14 +102,6 @@ public class Item {
       this.aboutAuthor = aboutAuthor;
    }
 
-   public List<Opinion> getOpinions() {
-      return opinions;
-   }
-
-   public void setOpinions(List<Opinion> opinions) {
-      this.opinions = opinions;
-   }
-
    public Integer getOpinionsNumber() {
       return opinionsNumber;
    }
@@ -125,12 +110,28 @@ public class Item {
       this.opinionsNumber = opinionsNumber;
    }
 
-   public List<Review> getReviews() {
-      return reviews;
+   public BigDecimal getOverallRate() {
+      return overallRate;
    }
 
-   public void setReviews(List<Review> reviews) {
-      this.reviews = reviews;
+   public void setOverallRate(BigDecimal overallRate) {
+      this.overallRate = overallRate;
+   }
+
+   public List<String> getRates() {
+      return rates;
+   }
+
+   public void setRates(List<String> rates) {
+      this.rates = rates;
+   }
+
+   public List<Opinion> getOpinions() {
+      return opinions;
+   }
+
+   public void setOpinions(List<Opinion> opinions) {
+      this.opinions = opinions;
    }
 
    public Integer getReviewsNumber() {
@@ -139,6 +140,14 @@ public class Item {
 
    public void setReviewsNumber(Integer reviewsNumber) {
       this.reviewsNumber = reviewsNumber;
+   }
+
+   public List<Review> getReviews() {
+      return reviews;
+   }
+
+   public void setReviews(List<Review> reviews) {
+      this.reviews = reviews;
    }
 
    public List<String> getCategories() {

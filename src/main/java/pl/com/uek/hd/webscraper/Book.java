@@ -1,7 +1,5 @@
 package pl.com.uek.hd.webscraper;
 
-import java.util.Date;
-
 public class Book {
     private String title;
     private String author;
@@ -11,7 +9,7 @@ public class Book {
     private String originalTitle;
     private String translation;
     private String ISBN;
-    private Date publishingDate;
+    private String publishingDate;
     private String format;
     private String catalogNumber;
 
@@ -79,11 +77,11 @@ public class Book {
         this.ISBN = ISBN;
     }
 
-    public Date getPublishingDate() {
+    public String getPublishingDate() {
         return publishingDate;
     }
 
-    public void setPublishingDate(Date publishingDate) {
+    public void setPublishingDate(String publishingDate) {
         this.publishingDate = publishingDate;
     }
 

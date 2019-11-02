@@ -2,7 +2,6 @@ package pl.com.uek.hd.webscraper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.css.StyleElement;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -41,6 +40,7 @@ public class WebScrap {
                         String itemUrl = "https:" + itemAnchor.getHrefAttribute();
                         HtmlPage itemHtmlPage = wc.getPage(itemUrl);
 
+                        //BOOK
                         HtmlElement bookTitle = itemHtmlPage.getFirstByXPath(".//div[@class='title-group']/h1/span[1]");
                         HtmlAnchor bookAuthor = itemHtmlPage.getFirstByXPath(".//dl[@class='author']/dd/a");
                         HtmlAnchor bookPublisher = itemHtmlPage.getFirstByXPath(".//div[@class='select_druk']/dd/a");
@@ -49,24 +49,25 @@ public class WebScrap {
                         HtmlAnchor bookOrigTitle = itemHtmlPage.getFirstByXPath(".//div[@id='section6']/dl/dd[1]/a");
                         // TODO book details
 
+                        // book and eBook prices
                         HtmlElement bookPriceRegular = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/span");
                         HtmlElement bookPriceOld = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/del");
                         HtmlElement bookPriceSale = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/ins");
-
                         HtmlElement ebookPriceRegular = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_ebook']/p[@class='book-price']/span");
                         HtmlElement ebookPriceOld = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_ebook']/p[@class='book-price']/del");
                         HtmlElement ebookPriceSale = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_ebook']/p[@class='book-price']/ins");
 
+                        // ITEM
                         List<HtmlElement> itemTags = itemHtmlPage.getByXPath("//ul[@class='tags']/li");
-                        List<String> tagsList = new ArrayList<>();
-                        for (HtmlElement itemTag : itemTags) {
-                            if (!tagsList.toString().contains(itemTag.asText())) {
-                                if (itemTag.getAttribute("class").contains("promotion"))
-                                    tagsList.add(StringUtils.substring(itemTag.asText(), 0, 8));
-                                else
-                                    tagsList.add(itemTag.asText());
-                            }
-                        }
+                        HtmlElement itemDescription = itemHtmlPage.getFirstByXPath(".//div[@class='book-description']/div[@class='text']");
+                        HtmlElement itemAboutAuthor = itemHtmlPage.getFirstByXPath(".//div[@class='author-info-book-page']");
+                        HtmlElement itemOpinionsNumber = itemHtmlPage.getFirstByXPath(".//h2[@class='votes-header-two']/span");
+                        HtmlElement itemOverallRate = itemHtmlPage.getFirstByXPath(".//span[@class='ocena']");
+                        List<HtmlElement> itemRates = itemHtmlPage.getByXPath("//ul[@class='oceny']/li");
+
+                        // OPINION
+                        List<HtmlElement> itemOpinions = itemHtmlPage.getByXPath("//div[@id='section4']/div[@class='list']/ol[@class='list']/li");
+
 
                         boolean bookSale = bookPriceOld != null && bookPriceSale != null;
                         boolean bookAvailable = (bookPriceRegular != null && !bookPriceRegular.asText().equals("niedostępna"))
@@ -103,6 +104,24 @@ public class WebScrap {
                             }
                         }
 
+                        List<String> tagsList = new ArrayList<>();
+                        for (HtmlElement itemTag : itemTags) {
+                            if (!tagsList.toString().contains(itemTag.asText())) {
+                                if (itemTag.getAttribute("class").contains("promotion"))
+                                    tagsList.add(StringUtils.substring(itemTag.asText(), 0, 8));
+                                else
+                                    tagsList.add(itemTag.asText());
+                            }
+                        }
+
+                        boolean opinionsAvailable = itemOpinionsNumber != null;
+
+                        List<String> ratesList = new ArrayList<>();
+                        for (HtmlElement itemRate : itemRates) {
+                            ratesList.add(itemRate.asText().replace("\r\n", " - "));
+                        }
+
+                        // BOOK
                         Book book = new Book();
                         book.setTitle(bookTitle.asText());
                         book.setAuthor(bookAuthor.asText());
@@ -111,15 +130,54 @@ public class WebScrap {
                         book.setCover(bookAvailable ? bookCover.asText() : null);
                         book.setOriginalTitle(bookOrigTitle == null ? null : bookOrigTitle.asText());
 
+                        // OPINION
+                        List<Opinion> opinionsList = new ArrayList<>();
+                        int opinionsCount = 0; // TODO usunąć na produkcji
+                        for (HtmlElement itemOpinion : itemOpinions) {
+                            if (opinionsCount < 10) {
+                                Opinion opinion = new Opinion();
+                                HtmlElement opinionRate = itemOpinion.getFirstByXPath(".//p[@class='author']/strong");
+                                HtmlElement opinionAuthorAdnDate = itemOpinion.getFirstByXPath(".//p[@class='author']");
+                                HtmlElement opinionText = itemOpinion.getFirstByXPath(".//blockquote/p");
+
+                                String authorString = StringUtils.substring(opinionAuthorAdnDate.asText(), 18, opinionAuthorAdnDate.asText().length() - 11);
+                                String author;
+                                if (!authorString.isEmpty() && authorString.substring(authorString.length() - 1).equals(","))
+                                    author = StringUtils.substring(authorString, 0, authorString.length() - 1);
+                                else
+                                    author = authorString;
+
+                                String opinionDate = StringUtils.substring(opinionAuthorAdnDate.asText(),
+                                        opinionAuthorAdnDate.asText().length() - 10, opinionAuthorAdnDate.asText().length());
+
+                                opinion.setRate(!opinionsAvailable ? null : new Integer(opinionRate.asText()));
+                                opinion.setAuthor(authorString.isEmpty() ? null : author);
+                                opinion.setDate(opinionDate.isEmpty() ? null : opinionDate);
+                                opinion.setText(opinionText == null ? null : opinionText.asText());
+
+                                opinionsList.add(opinion);
+                                opinionsCount++;
+                            }
+                        }
+
+                        // ITEM
                         Item item = new Item();
                         item.setBook(book);
                         item.setBookAvailable(bookAvailable);
                         item.setBookPriceOld(bookSale ? new BigDecimal(bPriceOld) : null);
                         item.setBookPrice(bookAvailable ? new BigDecimal(bPrice) : null);
-                        item.setEBookAvailable(ebookAvailable);
-                        item.setEBookPriceOld(ebookAvailable && ebookSale ? new BigDecimal(ebPriceOld) : null);
-                        item.setEBookPrice(ebookAvailable ? new BigDecimal(ebPrice) : null);
+                        item.seteBookAvailable(ebookAvailable);
+                        item.seteBookPriceOld(ebookAvailable && ebookSale ? new BigDecimal(ebPriceOld) : null);
+                        item.seteBookPrice(ebookAvailable ? new BigDecimal(ebPrice) : null);
                         item.setTags(tagsList.isEmpty() ? null : tagsList);
+                        item.setDescription(itemDescription == null ? null :
+                                itemDescription.asText().replace("\r"," ").replace("\n"," "));
+                        item.setAboutAuthor(itemAboutAuthor == null ? null : itemAboutAuthor.asText());
+                        item.setOpinionsNumber(!opinionsAvailable ? null :
+                                new Integer(StringUtils.substring(itemOpinionsNumber.asText(),1,(itemOpinionsNumber.asText().length()-1))));
+                        item.setOverallRate(itemOverallRate == null ? null : new BigDecimal(itemOverallRate.asText()));
+                        item.setRates(ratesList.isEmpty() ? null : ratesList);
+                        item.setOpinions(opinionsList);
 
                         ObjectMapper om = new ObjectMapper();
                         String jsonString = om.writeValueAsString(item);

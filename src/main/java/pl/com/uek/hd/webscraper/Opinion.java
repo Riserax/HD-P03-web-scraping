@@ -1,19 +1,16 @@
 package pl.com.uek.hd.webscraper;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 public class Opinion {
-    private BigDecimal rate;
+    private Integer rate;
     private String author;
-    private Date date;
+    private String date;
     private String text;
 
-    public BigDecimal getRate() {
+    public Integer getRate() {
         return rate;
     }
 
-    public void setRate(BigDecimal rate) {
+    public void setRate(Integer rate) {
         this.rate = rate;
     }
 
@@ -25,11 +22,11 @@ public class Opinion {
         this.author = author;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

@@ -20,7 +20,6 @@ public class Item {
    private List<Opinion> opinions;
    private Integer reviewsNumber;
    private List<Review> reviews;
-   private List<String> categories;
 
    public Book getBook() {
       return book;
@@ -148,13 +147,5 @@ public class Item {
 
    public void setReviews(List<Review> reviews) {
       this.reviews = reviews;
-   }
-
-   public List<String> getCategories() {
-      return categories;
-   }
-
-   public void setCategories(List<String> categories) {
-      this.categories = categories;
    }
 }

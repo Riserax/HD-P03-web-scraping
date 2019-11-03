@@ -11,7 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 //@Component
 public class WebScrap {
     public static void main(String[] args) {
@@ -33,7 +36,7 @@ public class WebScrap {
             HtmlPage htmlPage = wc.getPage(finalUrl);
             List<HtmlElement> items = htmlPage.getByXPath("//li[@class='classPresale']");
             if (!items.isEmpty()) {
-                int count = 0;
+                int count = 0; // TODO zrobić na parametr do wyboru użytkownikowi
                 for (HtmlElement htmlItem : items) {
                     if (count < 15) {
                         HtmlAnchor itemAnchor = htmlItem.getFirstByXPath(".//div[@class='book-info-middle']/h3/a");
@@ -46,8 +49,8 @@ public class WebScrap {
                         HtmlAnchor bookPublisher = itemHtmlPage.getFirstByXPath(".//div[@class='select_druk']/dd/a");
                         HtmlElement bookPages = itemHtmlPage.getFirstByXPath(".//dl[@class='info']/dd[2]");
                         HtmlElement bookCover = itemHtmlPage.getFirstByXPath(".//dl[@class='info']/dd[last()-1]");
-                        HtmlAnchor bookOrigTitle = itemHtmlPage.getFirstByXPath(".//div[@id='section6']/dl/dd[1]/a");
-                        // TODO book details
+                        List<HtmlElement> detailsTitles = itemHtmlPage.getByXPath("//div[@id='section6']/dl/dt");
+                        List<HtmlElement> detailsTexts = itemHtmlPage.getByXPath("//div[@id='section6']/dl/dd");
 
                         // book and eBook prices
                         HtmlElement bookPriceRegular = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/span");
@@ -57,6 +60,12 @@ public class WebScrap {
                         HtmlElement ebookPriceOld = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_ebook']/p[@class='book-price']/del");
                         HtmlElement ebookPriceSale = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_ebook']/p[@class='book-price']/ins");
 
+                        // OPINION
+                        List<HtmlElement> itemOpinions = itemHtmlPage.getByXPath("//div[@id='section4']/div[@class='list']/ol[@class='list']/li");
+                        // REVIEW
+                        List<HtmlElement> itemReviews = itemHtmlPage.getByXPath("//div[@id='section5']/ol[@class='list']/li");
+                        HtmlElement reviewsNumber = itemHtmlPage.getFirstByXPath(".//div[@id='section5']/h2");
+
                         // ITEM
                         List<HtmlElement> itemTags = itemHtmlPage.getByXPath("//ul[@class='tags']/li");
                         HtmlElement itemDescription = itemHtmlPage.getFirstByXPath(".//div[@class='book-description']/div[@class='text']");
@@ -65,9 +74,48 @@ public class WebScrap {
                         HtmlElement itemOverallRate = itemHtmlPage.getFirstByXPath(".//span[@class='ocena']");
                         List<HtmlElement> itemRates = itemHtmlPage.getByXPath("//ul[@class='oceny']/li");
 
-                        // OPINION
-                        List<HtmlElement> itemOpinions = itemHtmlPage.getByXPath("//div[@id='section4']/div[@class='list']/ol[@class='list']/li");
+                        // book details
+                        Map<Integer,String> detTitles = new HashMap<>();
+                        for (int i = 0; i < detailsTitles.size(); i++) {
+                            detTitles.put(i, detailsTitles.get(i).asText());
+                        }
 
+                        Map<Integer,String> detTexts = new HashMap<>();
+                        for (int i = 0; i < detailsTexts.size(); i++) {
+                            detTexts.put(i, detailsTexts.get(i).asText());
+                        }
+
+                        String bookOrigTitle = null;
+                        String bookTranslator = null;
+                        String bookISBN = null;
+                        String bookPublishDate = null;
+                        String bookFormat = null;
+                        String bookCatalogNr = null;
+
+                        for (int i = 0; i < detTitles.size(); i++) {
+                            if (detTexts.containsKey(i)) {
+                                switch (detTitles.get(i)) {
+                                    case "Tytuł oryginału:":
+                                        bookOrigTitle = detTexts.get(i);
+                                        break;
+                                    case "Tłumaczenie:":
+                                        bookTranslator = detTexts.get(i);
+                                        break;
+                                    case "ISBN Książki drukowanej:":
+                                        bookISBN = detTexts.get(i);
+                                        break;
+                                    case "Data wydania książki drukowanej:":
+                                        bookPublishDate = detTexts.get(i);
+                                        break;
+                                    case "Format:":
+                                        bookFormat = detTexts.get(i);
+                                        break;
+                                    case "Numer z katalogu:":
+                                        bookCatalogNr = detTexts.get(i);
+                                        break;
+                                }
+                            }
+                        }
 
                         boolean bookSale = bookPriceOld != null && bookPriceSale != null;
                         boolean bookAvailable = (bookPriceRegular != null && !bookPriceRegular.asText().equals("niedostępna"))
@@ -128,7 +176,12 @@ public class WebScrap {
                         book.setPublisher(bookPublisher.asText());
                         book.setNumberOfPages(bookPages == null ? null : new Integer(bookPages.asText()));
                         book.setCover(bookAvailable ? bookCover.asText() : null);
-                        book.setOriginalTitle(bookOrigTitle == null ? null : bookOrigTitle.asText());
+                        book.setOriginalTitle(bookOrigTitle);
+                        book.setTranslator(bookTranslator);
+                        book.setISBN(bookISBN);
+                        book.setPublishingDate(bookPublishDate);
+                        book.setFormat(bookFormat);
+                        book.setCatalogNumber(bookCatalogNr);
 
                         // OPINION
                         List<Opinion> opinionsList = new ArrayList<>();
@@ -160,6 +213,34 @@ public class WebScrap {
                             }
                         }
 
+                        // REVIEW
+                        List<Review> reviewsList = new ArrayList<>();
+                        int rewiewsCount = 0; // TODO usunąć na produkcji
+                        for (HtmlElement itemReview : itemReviews) {
+                            if (rewiewsCount < 2) {
+                                Review review = new Review();
+                                HtmlAnchor reviewOrganization = itemReview.getFirstByXPath(".//p[@class='author']/a");
+                                HtmlElement reviewAuthorAndDate = itemReview.getFirstByXPath(".//p[@class='author']");
+                                HtmlElement opinionText = itemReview.getFirstByXPath(".//blockquote");
+
+                                String organization = reviewOrganization == null ? null : reviewOrganization.asText();
+                                String author = organization != null ?
+                                        StringUtils.substring(reviewAuthorAndDate.asText(),organization.length()+1,reviewAuthorAndDate.asText().length()-12)
+                                        : StringUtils.substring(reviewAuthorAndDate.asText(),1,reviewAuthorAndDate.asText().length()-12);
+                                String date = StringUtils.substring(reviewAuthorAndDate.asText(),
+                                        reviewAuthorAndDate.asText().length()-10, reviewAuthorAndDate.asText().length());
+
+                                review.setOrganization(organization);
+                                review.setAuthor(author);
+                                review.setDate(date);
+                                review.setText(opinionText.asText().replace("\r\n"," ")
+                                        .replace("\r"," ").replace("\n"," "));
+
+                                reviewsList.add(review);
+                                rewiewsCount++;
+                            }
+                        }
+
                         // ITEM
                         Item item = new Item();
                         item.setBook(book);
@@ -171,13 +252,16 @@ public class WebScrap {
                         item.seteBookPrice(ebookAvailable ? new BigDecimal(ebPrice) : null);
                         item.setTags(tagsList.isEmpty() ? null : tagsList);
                         item.setDescription(itemDescription == null ? null :
-                                itemDescription.asText().replace("\r"," ").replace("\n"," "));
+                                itemDescription.asText().replace("\r\n"," ")
+                                        .replace("\r"," ").replace("\n"," "));
                         item.setAboutAuthor(itemAboutAuthor == null ? null : itemAboutAuthor.asText());
-                        item.setOpinionsNumber(!opinionsAvailable ? null :
-                                new Integer(StringUtils.substring(itemOpinionsNumber.asText(),1,(itemOpinionsNumber.asText().length()-1))));
+                        item.setOpinionsNumber(!opinionsAvailable ? null : new Integer(StringUtils.substring(itemOpinionsNumber.asText(),
+                                1,(itemOpinionsNumber.asText().length()-1))));
                         item.setOverallRate(itemOverallRate == null ? null : new BigDecimal(itemOverallRate.asText()));
                         item.setRates(ratesList.isEmpty() ? null : ratesList);
                         item.setOpinions(opinionsList);
+                        item.setReviewsNumber(reviewsNumber == null ? null : new Integer(reviewsNumber.asText().replaceAll("\\D+","")));
+                        item.setReviews(reviewsList);
 
                         ObjectMapper om = new ObjectMapper();
                         String jsonString = om.writeValueAsString(item);

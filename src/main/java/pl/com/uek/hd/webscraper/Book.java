@@ -7,7 +7,7 @@ public class Book {
     private Integer numberOfPages;
     private String cover;
     private String originalTitle;
-    private String translation;
+    private String translator;
     private String ISBN;
     private String publishingDate;
     private String format;
@@ -61,12 +61,12 @@ public class Book {
         this.originalTitle = originalTitle;
     }
 
-    public String getTranslation() {
-        return translation;
+    public String getTranslator() {
+        return translator;
     }
 
-    public void setTranslation(String translation) {
-        this.translation = translation;
+    public void setTranslator(String translator) {
+        this.translator = translator;
     }
 
     public String getISBN() {

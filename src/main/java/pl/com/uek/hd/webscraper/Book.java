@@ -1,19 +1,24 @@
 package pl.com.uek.hd.webscraper;
 
 public class Book {
-    private String name;
+    private String title;
     private String author;
     private String publisher;
     private Integer numberOfPages;
     private String cover;
-    private String details;
+    private String originalTitle;
+    private String translator;
+    private String ISBN;
+    private String publishingDate;
+    private String format;
+    private String catalogNumber;
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAuthor() {
@@ -48,11 +53,51 @@ public class Book {
         this.cover = cover;
     }
 
-    public String getDetails() {
-        return details;
+    public String getOriginalTitle() {
+        return originalTitle;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public String getTranslator() {
+        return translator;
+    }
+
+    public void setTranslator(String translator) {
+        this.translator = translator;
+    }
+
+    public String getISBN() {
+        return ISBN;
+    }
+
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
+    }
+
+    public String getPublishingDate() {
+        return publishingDate;
+    }
+
+    public void setPublishingDate(String publishingDate) {
+        this.publishingDate = publishingDate;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public String getCatalogNumber() {
+        return catalogNumber;
+    }
+
+    public void setCatalogNumber(String catalogNumber) {
+        this.catalogNumber = catalogNumber;
     }
 }

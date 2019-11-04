@@ -5,20 +5,21 @@ import java.util.List;
 
 public class Item {
    private Book book;
-   private List<String> tags;
-   private BigDecimal overallRate;
-   private BigDecimal price;
+   private boolean bookAvailable;
+   private BigDecimal bookPriceOld;
+   private BigDecimal bookPrice;
    private boolean eBookAvailable;
+   private BigDecimal eBookPriceOld;
    private BigDecimal eBookPrice;
-   private String url;
+   private List<String> tags;
    private String description;
    private String aboutAuthor;
-   private List<Opinion> opinions;
    private Integer opinionsNumber;
-   private List<Review> reviews;
+   private BigDecimal overallRate;
+   private List<String> rates;
+   private List<Opinion> opinions;
    private Integer reviewsNumber;
-   private List<String> categories;
-//   private String tableOfContents; // nie wiem czy jestesmy w stanie i czy jest sens
+   private List<Review> reviews;
 
    public Book getBook() {
       return book;
@@ -28,28 +29,28 @@ public class Item {
       this.book = book;
    }
 
-   public List<String> getTags() {
-      return tags;
+   public boolean isBookAvailable() {
+      return bookAvailable;
    }
 
-   public void setTags(List<String> tags) {
-      this.tags = tags;
+   public void setBookAvailable(boolean bookAvailable) {
+      this.bookAvailable = bookAvailable;
    }
 
-   public BigDecimal getOverallRate() {
-      return overallRate;
+   public BigDecimal getBookPriceOld() {
+      return bookPriceOld;
    }
 
-   public void setOverallRate(BigDecimal overallRate) {
-      this.overallRate = overallRate;
+   public void setBookPriceOld(BigDecimal bookPriceOld) {
+      this.bookPriceOld = bookPriceOld;
    }
 
-   public BigDecimal getPrice() {
-      return price;
+   public BigDecimal getBookPrice() {
+      return bookPrice;
    }
 
-   public void setPrice(BigDecimal price) {
-      this.price = price;
+   public void setBookPrice(BigDecimal bookPrice) {
+      this.bookPrice = bookPrice;
    }
 
    public boolean iseBookAvailable() {
@@ -60,6 +61,14 @@ public class Item {
       this.eBookAvailable = eBookAvailable;
    }
 
+   public BigDecimal geteBookPriceOld() {
+      return eBookPriceOld;
+   }
+
+   public void seteBookPriceOld(BigDecimal eBookPriceOld) {
+      this.eBookPriceOld = eBookPriceOld;
+   }
+
    public BigDecimal geteBookPrice() {
       return eBookPrice;
    }
@@ -68,12 +77,12 @@ public class Item {
       this.eBookPrice = eBookPrice;
    }
 
-   public String getUrl() {
-      return url;
+   public List<String> getTags() {
+      return tags;
    }
 
-   public void setUrl(String url) {
-      this.url = url;
+   public void setTags(List<String> tags) {
+      this.tags = tags;
    }
 
    public String getDescription() {
@@ -92,14 +101,6 @@ public class Item {
       this.aboutAuthor = aboutAuthor;
    }
 
-   public List<Opinion> getOpinions() {
-      return opinions;
-   }
-
-   public void setOpinions(List<Opinion> opinions) {
-      this.opinions = opinions;
-   }
-
    public Integer getOpinionsNumber() {
       return opinionsNumber;
    }
@@ -108,12 +109,28 @@ public class Item {
       this.opinionsNumber = opinionsNumber;
    }
 
-   public List<Review> getReviews() {
-      return reviews;
+   public BigDecimal getOverallRate() {
+      return overallRate;
    }
 
-   public void setReviews(List<Review> reviews) {
-      this.reviews = reviews;
+   public void setOverallRate(BigDecimal overallRate) {
+      this.overallRate = overallRate;
+   }
+
+   public List<String> getRates() {
+      return rates;
+   }
+
+   public void setRates(List<String> rates) {
+      this.rates = rates;
+   }
+
+   public List<Opinion> getOpinions() {
+      return opinions;
+   }
+
+   public void setOpinions(List<Opinion> opinions) {
+      this.opinions = opinions;
    }
 
    public Integer getReviewsNumber() {
@@ -124,11 +141,11 @@ public class Item {
       this.reviewsNumber = reviewsNumber;
    }
 
-   public List<String> getCategories() {
-      return categories;
+   public List<Review> getReviews() {
+      return reviews;
    }
 
-   public void setCategories(List<String> categories) {
-      this.categories = categories;
+   public void setReviews(List<Review> reviews) {
+      this.reviews = reviews;
    }
 }

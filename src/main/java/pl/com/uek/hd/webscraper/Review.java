@@ -3,6 +3,7 @@ package pl.com.uek.hd.webscraper;
 public class Review {
     private String organization;
     private String author;
+    private String date;
     private String text;
 
     public String getOrganization() {
@@ -19,6 +20,14 @@ public class Review {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getText() {

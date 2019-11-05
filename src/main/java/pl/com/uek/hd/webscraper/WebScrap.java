@@ -6,6 +6,10 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.apache.commons.lang3.StringUtils;
+import pl.com.uek.hd.mvc.model.Book;
+import pl.com.uek.hd.mvc.model.Item;
+import pl.com.uek.hd.mvc.model.Opinion;
+import pl.com.uek.hd.mvc.model.Review;
 //import org.springframework.stereotype.Component;
 
 import java.io.IOException;

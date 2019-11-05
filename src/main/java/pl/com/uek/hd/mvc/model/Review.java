@@ -1,17 +1,27 @@
-package pl.com.uek.hd.webscraper;
+package pl.com.uek.hd.mvc.model;
 
-public class Opinion {
-    private Integer rate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "review")
+public class Review {
+    @Id
+    @Column(name = "id")
+    private long reviewId;
+    private String organization;
     private String author;
     private String date;
     private String text;
 
-    public Integer getRate() {
-        return rate;
+    public String getOrganization() {
+        return organization;
     }
 
-    public void setRate(Integer rate) {
-        this.rate = rate;
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
     public String getAuthor() {

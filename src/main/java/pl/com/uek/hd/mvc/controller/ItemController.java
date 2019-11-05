@@ -2,27 +2,27 @@ package pl.com.uek.hd.mvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.com.uek.hd.mvc.service.BooksService;
+import pl.com.uek.hd.mvc.service.ItemService;
+
 
 @RestController
-public class BooksController {
+public class ItemController {
     @Autowired
-    BooksService booksService;
+    ItemService itemService;
 
     @GetMapping("/getExtractedBooks")
     public Iterable getExtractedBooks(){
-        return booksService.getExtractedBooks();
+        return itemService.getExtractedBooks();
     }
 
     @GetMapping("/getTransformedBooks")
     public Iterable getTransformedBooks(){
-        return booksService.getTransformedBooks();
+        return itemService.getTransformedBooks();
     }
 
     @GetMapping("/getTransformedAndLoad")
     public Iterable getTransformedAndLoad(){
-        return booksService.getTransformedAndLoad();
+        return itemService.getTransformedAndLoad();
     }
 }

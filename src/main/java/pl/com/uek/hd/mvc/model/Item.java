@@ -1,10 +1,16 @@
-package pl.com.uek.hd.webscraper;
+package pl.com.uek.hd.mvc.model;
 
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Entity
+@Table(name = "item")
 public class Item {
-   private Book book;
+   @Id
+   @Column(name = "id")
+   private long itemId;
    private boolean bookAvailable;
    private BigDecimal bookPriceOld;
    private BigDecimal bookPrice;
@@ -17,9 +23,30 @@ public class Item {
    private Integer opinionsNumber;
    private BigDecimal overallRate;
    private List<String> rates;
-   private List<Opinion> opinions;
+
    private Integer reviewsNumber;
-   private List<Review> reviews;
+
+   @Override
+   public String toString() {
+      return "Item{" +
+              "bookAvailable=" + bookAvailable +
+              ", bookPriceOld=" + bookPriceOld +
+              ", bookPrice=" + bookPrice +
+              ", eBookAvailable=" + eBookAvailable +
+              ", eBookPriceOld=" + eBookPriceOld +
+              ", eBookPrice=" + eBookPrice +
+              ", tags=" + tags +
+              ", description='" + description + '\'' +
+              ", aboutAuthor='" + aboutAuthor + '\'' +
+              ", opinionsNumber=" + opinionsNumber +
+              ", overallRate=" + overallRate +
+              ", rates=" + rates +
+              ", reviewsNumber=" + reviewsNumber +
+              ", book=" + book +
+              ", opinions=" + opinions +
+              ", reviews=" + reviews +
+              '}';
+   }
 
    public Book getBook() {
       return book;
@@ -148,4 +175,17 @@ public class Item {
    public void setReviews(List<Review> reviews) {
       this.reviews = reviews;
    }
+
+   @OneToOne
+   @JoinColumn(name = "book_id")
+   private Book book;
+
+   @OneToMany(fetch = FetchType.LAZY)
+   @JoinColumn(name = "opinion_id")
+   private List<Opinion> opinions;
+
+   @OneToMany(fetch = FetchType.LAZY)
+   @JoinColumn(name = "review_id")
+   private List<Review> reviews;
+
 }

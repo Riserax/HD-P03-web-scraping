@@ -1,6 +1,16 @@
-package pl.com.uek.hd.webscraper;
+package pl.com.uek.hd.mvc.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "book")
 public class Book {
+    @Id
+    @Column(name = "id")
+    private long bookId;
     private String title;
     private String author;
     private String publisher;

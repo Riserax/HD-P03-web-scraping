@@ -19,12 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemCreator implements Serializable {
-    private List<String> items;
     private List<HtmlElement> htmlItems;
 
-    public List<String> getItems() {
-        return items;
-    }
 
     public List<HtmlElement> getHtmlItems() {
         return htmlItems;
@@ -34,8 +30,9 @@ public class ItemCreator implements Serializable {
         this.htmlItems = htmlItems;
     }
 
-    public Item createItem() {
+    public List<Item> createItem() {
         try {
+            List<Item> items = new ArrayList<>();
             WebClient wc = new WebClient();
             wc.getOptions().setCssEnabled(false);
             wc.getOptions().setJavaScriptEnabled(false);
@@ -158,20 +155,29 @@ public class ItemCreator implements Serializable {
                         String jsonString = om.writeValueAsString(item);
                         System.out.println(jsonString);
 
-                        items = new ArrayList<>();
-                        items.add(jsonString);
-
+                        items.add(item);
                         count++;
-                        try (FileWriter file = new FileWriter("twoItems.json")) {
-                            file.write(items.toString());
-                            System.out.println("Successfully Copied JSON Object to File...");
-                        }
-                        return item;
+
                     }
                 }
+                System.out.println(items.size());
+                try {
+                    ObjectMapper om = new ObjectMapper();
+                    FileWriter file = new FileWriter("fiveItems.json");
+                    for(Item item : items){
+                        String jsonString = om.writeValueAsString(item);
+                        System.out.println(jsonString);
+                        file.append(jsonString + "\n");
+                        System.out.println("Successfully Copied JSON Object to File...");
+                    }
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+                return items;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Item();}
+        return new ArrayList();}
 }

@@ -113,19 +113,6 @@ public class TransformatorFactory {
                             boolean bookAvailable = (bookPriceRegular != null && !bookPriceRegular.asText().equals("niedostępna"))
                                     || bookSale;
 
-
-
-                            List<String> tagsList = new ArrayList<>();
-                            for (HtmlElement itemTag : itemTags) {
-                                if (!tagsList.toString().contains(itemTag.asText())) {
-                                    if (itemTag.getAttribute("class").contains("promotion"))
-                                        tagsList.add(StringUtils.substring(itemTag.asText(), 0, 8));
-                                    else
-                                        tagsList.add(itemTag.asText());
-                                }
-                            }
-
-
                             List<String> ratesList = new ArrayList<>();
                             for (HtmlElement itemRate : itemRates) {
                                 ratesList.add(itemRate.asText().replace("\r\n", " - "));

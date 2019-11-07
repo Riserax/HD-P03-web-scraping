@@ -11,7 +11,5 @@ public class WebScrapObjVer {
     public static void main(String[] args){
 
 
-
-
     }
 }

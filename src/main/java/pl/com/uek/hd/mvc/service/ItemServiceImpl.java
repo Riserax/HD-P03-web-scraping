@@ -6,7 +6,6 @@ import pl.com.uek.hd.mvc.model.Item;
 import pl.com.uek.hd.mvc.repository.ItemRepository;
 import pl.com.uek.hd.webscraper.Extractor;
 import pl.com.uek.hd.webscraper.ItemCreator;
-import pl.com.uek.hd.webscraper.TransformatorImpl;
 
 import java.util.ArrayList;
 import java.util.List;

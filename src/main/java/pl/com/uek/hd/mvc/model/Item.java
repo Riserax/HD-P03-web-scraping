@@ -6,10 +6,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "item")
+@Table(name = "items")
 public class Item {
    @Id
    @Column(name = "id")
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private long itemId;
    private boolean bookAvailable;
    private BigDecimal bookPriceOld;
@@ -17,14 +18,14 @@ public class Item {
    private boolean eBookAvailable;
    private BigDecimal eBookPriceOld;
    private BigDecimal eBookPrice;
-   private List<String> tags;
-   private String description;
-   private String aboutAuthor;
    private Integer opinionsNumber;
    private BigDecimal overallRate;
-   private List<String> rates;
-
    private Integer reviewsNumber;
+   @Lob
+   private String description;
+   @Lob
+   private String aboutAuthor;
+
 
    @Override
    public String toString() {
@@ -35,12 +36,12 @@ public class Item {
               ", eBookAvailable=" + eBookAvailable +
               ", eBookPriceOld=" + eBookPriceOld +
               ", eBookPrice=" + eBookPrice +
-              ", tags=" + tags +
+//              ", tags=" + tags +
               ", description='" + description + '\'' +
               ", aboutAuthor='" + aboutAuthor + '\'' +
               ", opinionsNumber=" + opinionsNumber +
               ", overallRate=" + overallRate +
-              ", rates=" + rates +
+//              ", rates=" + rates +
               ", reviewsNumber=" + reviewsNumber +
               ", book=" + book +
               ", opinions=" + opinions +
@@ -51,6 +52,10 @@ public class Item {
    public Book getBook() {
       return book;
    }
+
+   public long getItemId() { return itemId; }
+
+   public void setItemId(long itemId) { this.itemId = itemId; }
 
    public void setBook(Book book) {
       this.book = book;
@@ -176,16 +181,24 @@ public class Item {
       this.reviews = reviews;
    }
 
-   @OneToOne
-   @JoinColumn(name = "book_id")
+   @ElementCollection
+   @CollectionTable(name ="rates")
+   private List<String> rates;
+
+   @ElementCollection
+   @CollectionTable(name ="tags")
+   private List<String> tags;
+
+   @OneToOne(cascade=CascadeType.ALL)
+   @JoinColumn(name = "books_id")
    private Book book;
 
-   @OneToMany(fetch = FetchType.LAZY)
-   @JoinColumn(name = "opinion_id")
+   @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+   @JoinColumn(name = "items_id")
    private List<Opinion> opinions;
 
-   @OneToMany(fetch = FetchType.LAZY)
-   @JoinColumn(name = "review_id")
+   @OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+   @JoinColumn(name = "items_id")
    private List<Review> reviews;
 
 }

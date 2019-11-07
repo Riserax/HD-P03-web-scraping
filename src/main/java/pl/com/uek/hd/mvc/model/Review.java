@@ -1,20 +1,24 @@
 package pl.com.uek.hd.mvc.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "review")
+@Table(name = "reviews")
 public class Review {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long reviewId;
+
     private String organization;
     private String author;
     private String date;
+    @Lob
     private String text;
+
+    public long getReviewId() { return reviewId; }
+
+    public void setReviewId(long reviewId) { this.reviewId = reviewId; }
 
     public String getOrganization() {
         return organization;

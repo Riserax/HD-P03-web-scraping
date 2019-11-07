@@ -254,7 +254,7 @@ public class WebScrap {
                         item.seteBookAvailable(ebookAvailable);
                         item.seteBookPriceOld(ebookAvailable && ebookSale ? new BigDecimal(ebPriceOld) : null);
                         item.seteBookPrice(ebookAvailable ? new BigDecimal(ebPrice) : null);
-                        item.setTags(tagsList.isEmpty() ? null : tagsList);
+//                        item.setTags(tagsList.isEmpty() ? null : tagsList);
                         item.setDescription(itemDescription == null ? null :
                                 itemDescription.asText().replace("\r\n"," ")
                                         .replace("\r"," ").replace("\n"," "));
@@ -262,7 +262,7 @@ public class WebScrap {
                         item.setOpinionsNumber(!opinionsAvailable ? null : new Integer(StringUtils.substring(itemOpinionsNumber.asText(),
                                 1,(itemOpinionsNumber.asText().length()-1))));
                         item.setOverallRate(itemOverallRate == null ? null : new BigDecimal(itemOverallRate.asText()));
-                        item.setRates(ratesList.isEmpty() ? null : ratesList);
+//                        item.setRates(ratesList.isEmpty() ? null : ratesList);
                         item.setOpinions(opinionsList);
                         item.setReviewsNumber(reviewsNumber == null ? null : new Integer(reviewsNumber.asText().replaceAll("\\D+","")));
                         item.setReviews(reviewsList);

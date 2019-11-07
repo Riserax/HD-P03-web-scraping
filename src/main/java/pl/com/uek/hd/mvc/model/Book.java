@@ -1,16 +1,15 @@
 package pl.com.uek.hd.mvc.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "book")
+@Table(name = "books")
 public class Book {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long bookId;
+
     private String title;
     private String author;
     private String publisher;
@@ -22,6 +21,11 @@ public class Book {
     private String publishingDate;
     private String format;
     private String catalogNumber;
+
+
+    public long getBookId() { return bookId; }
+
+    public void setBookId(long bookId) { this.bookId = bookId; }
 
     public String getTitle() {
         return title;

@@ -7,10 +7,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.apache.commons.lang3.StringUtils;
 import pl.com.uek.hd.mvc.model.Book;
-import pl.com.uek.hd.mvc.model.Item;
 import pl.com.uek.hd.mvc.model.Opinion;
 import pl.com.uek.hd.mvc.model.Review;
-import pl.com.uek.hd.webscraper.Transformator;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;

@@ -11,6 +11,11 @@ public class ItemController {
     @Autowired
     ItemService itemService;
 
+    @GetMapping
+    public void saveItem(){
+        itemService.saveItem();
+    }
+
     @GetMapping("/getExtractedBooks")
     public Iterable getExtractedBooks(){
         return itemService.getExtractedBooks();

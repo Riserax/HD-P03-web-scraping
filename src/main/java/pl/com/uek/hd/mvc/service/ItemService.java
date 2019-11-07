@@ -11,4 +11,6 @@ public interface ItemService {
     public Iterable<String> getTransformedBooks();
 
     public Iterable getTransformedAndLoad();
+
+    public void saveItem();
 }

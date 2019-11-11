@@ -26,6 +26,27 @@ public class Item {
    @Lob
    private String aboutAuthor;
 
+   public Item() {
+   }
+
+   public Item(boolean bookAvailable, BigDecimal bookPriceOld, BigDecimal bookPrice, boolean eBookAvailable, BigDecimal eBookPriceOld, BigDecimal eBookPrice, Integer opinionsNumber, BigDecimal overallRate, Integer reviewsNumber, String description, String aboutAuthor, List<String> rates, List<String> tags, Book book, List<Opinion> opinions, List<Review> reviews) {
+      this.bookAvailable = bookAvailable;
+      this.bookPriceOld = bookPriceOld;
+      this.bookPrice = bookPrice;
+      this.eBookAvailable = eBookAvailable;
+      this.eBookPriceOld = eBookPriceOld;
+      this.eBookPrice = eBookPrice;
+      this.opinionsNumber = opinionsNumber;
+      this.overallRate = overallRate;
+      this.reviewsNumber = reviewsNumber;
+      this.description = description;
+      this.aboutAuthor = aboutAuthor;
+      this.rates = rates;
+      this.tags = tags;
+      this.book = book;
+      this.opinions = opinions;
+      this.reviews = reviews;
+   }
 
    @Override
    public String toString() {
@@ -189,8 +210,8 @@ public class Item {
    @CollectionTable(name ="tags")
    private List<String> tags;
 
-   @OneToOne(cascade=CascadeType.ALL)
-   @JoinColumn(name = "books_id")
+   @OneToOne(cascade = CascadeType.ALL)
+   @JoinColumn(name = "books_isbn")
    private Book book;
 
    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)

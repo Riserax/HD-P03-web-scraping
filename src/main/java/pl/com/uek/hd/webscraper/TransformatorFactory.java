@@ -1,6 +1,5 @@
 package pl.com.uek.hd.webscraper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -12,7 +11,6 @@ import pl.com.uek.hd.mvc.model.Review;
 
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,7 +92,7 @@ public class TransformatorFactory {
                                             bookTranslator = detTexts.get(i);
                                             break;
                                         case "ISBN Książki drukowanej:":
-                                            bookISBN = detTexts.get(i);
+                                            bookISBN = detTexts.get(i).substring(19);
                                             break;
                                         case "Data wydania książki drukowanej:":
                                             bookPublishDate = detTexts.get(i);
@@ -128,14 +126,10 @@ public class TransformatorFactory {
                             book.setOriginalTitle(bookOrigTitle);
                             book.setTranslator(bookTranslator);
                             book.setISBN(bookISBN);
+                            book.setCatalogNumber(bookCatalogNr);
                             book.setPublishingDate(bookPublishDate);
                             book.setFormat(bookFormat);
-                            book.setCatalogNumber(bookCatalogNr);
 
-                            ObjectMapper om = new ObjectMapper();
-                            String jsonString = om.writeValueAsString(book);
-
-                            System.out.println(jsonString);
                             return book;
                 }
             } catch (IOException e) {
@@ -202,12 +196,6 @@ public class TransformatorFactory {
                             opinionsCount++;
                         }
                     }
-
-
-                    ObjectMapper om = new ObjectMapper();
-                    String jsonString = om.writeValueAsString(opinionsList);
-
-                    System.out.println(jsonString);
                     return opinionsList;
                 }
             } catch (IOException e) {
@@ -264,12 +252,6 @@ public class TransformatorFactory {
                             rewiewsCount++;
                         }
                     }
-
-
-                    ObjectMapper om = new ObjectMapper();
-                    String jsonString = om.writeValueAsString(reviewsList);
-
-                    System.out.println(jsonString);
                     return reviewsList; }
             } catch (IOException e) {
                 e.printStackTrace();

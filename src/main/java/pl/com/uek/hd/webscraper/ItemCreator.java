@@ -46,7 +46,6 @@ public class ItemCreator implements Serializable {
                         String itemUrl = "https:" + itemAnchor.getHrefAttribute();
                         HtmlPage itemHtmlPage = wc.getPage(itemUrl);
 
-                        System.out.println(htmlItems.size());
                         // book and eBook prices
                         HtmlElement bookPriceRegular = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/span");
                         HtmlElement bookPriceOld = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/del");
@@ -152,10 +151,6 @@ public class ItemCreator implements Serializable {
                         item.setReviewsNumber(reviewsNumber == null ? null : new Integer(reviewsNumber.asText().replaceAll("\\D+","")));
                         item.setReviews(reviewsList);
 
-                        ObjectMapper om = new ObjectMapper();
-                        String jsonString = om.writeValueAsString(item);
-                        System.out.println(jsonString);
-
                         items.add(item);
                         count++;
 
@@ -167,7 +162,6 @@ public class ItemCreator implements Serializable {
                     FileWriter file = new FileWriter("fiveItems.json");
                     for(Item item : items){
                         String jsonString = om.writeValueAsString(item);
-                        System.out.println(jsonString);
                         file.append(jsonString + "\n");
                         System.out.println("Successfully Copied JSON Object to File...");
                     }

@@ -1,15 +1,17 @@
 package pl.com.uek.hd.mvc.model;
 
+
+import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.GeneratorType;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "books")
 public class Book {
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long bookId;
-
+    @Column(length = 14)
+    private String ISBN;
     private String title;
     private String author;
     private String publisher;
@@ -17,15 +19,26 @@ public class Book {
     private String cover;
     private String originalTitle;
     private String translator;
-    private String ISBN;
     private String publishingDate;
     private String format;
     private String catalogNumber;
 
+    public Book() {
+    }
 
-    public long getBookId() { return bookId; }
-
-    public void setBookId(long bookId) { this.bookId = bookId; }
+    public Book(String ISBN, String title, String author, String publisher, Integer numberOfPages, String cover, String originalTitle, String translator, String publishingDate, String format, String catalogNumber) {
+        this.ISBN = ISBN;
+        this.title = title;
+        this.author = author;
+        this.publisher = publisher;
+        this.numberOfPages = numberOfPages;
+        this.cover = cover;
+        this.originalTitle = originalTitle;
+        this.translator = translator;
+        this.publishingDate = publishingDate;
+        this.format = format;
+        this.catalogNumber = catalogNumber;
+    }
 
     public String getTitle() {
         return title;

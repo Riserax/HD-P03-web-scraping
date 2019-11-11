@@ -14,33 +14,37 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     @Autowired
     ItemRepository itemRepository;
+    String mainUrl = "https://helion.pl/";
+    String categoriesBooks = "kategorie/ksiazki/";
+    String[] booksUndercategories = {"programowanie","bazy-danych","elektronika"};
+    Extractor extractor = new Extractor(mainUrl, categoriesBooks, booksUndercategories);
+    ItemCreator itemCreator = new ItemCreator();
 
-    public void saveItem(){
-        String mainUrl = "https://helion.pl/";
-        String categoriesBooks = "kategorie/ksiazki/";
-        String[] booksUndercategories = {"programowanie","bazy-danych","elektronika"};
-        Extractor extractor = new Extractor(mainUrl, categoriesBooks, booksUndercategories);
-        extractor.extract();
-
-        ItemCreator itemCreator = new ItemCreator();
-        itemCreator.setHtmlItems(extractor.getHtmlItems());
-        List<Item> item = itemCreator.createItem();
+    public void saveItem(int itemsAmount){
+        this.extractor.extract();
+        this.itemCreator.setHtmlItems(this.extractor.getHtmlItems());
+        List<Item> item = this.itemCreator.createItems(itemsAmount);
         System.out.println(item.size());
         itemRepository.save(item.get(1));
     }
 
     @Override
-    public Iterable<String> getExtractedBooks() {
-        return new ArrayList<>();
+    public Iterable getExtractedItems() {
+        this.extractor.extract();
+        return this.extractor.getExtractedItemsNodes();
     }
 
     @Override
-    public Iterable<String> getTransformedBooks() {
-        return new ArrayList<>();
+    public Iterable getTransformedItems(int itemsAmount) {
+        this.extractor.extract();
+        this.itemCreator.setHtmlItems(this.extractor.getHtmlItems());
+        return this.itemCreator.createItems(itemsAmount);
     }
 
     @Override
-    public Iterable getTransformedAndLoad() {
-        return new ArrayList<>();
+    public Iterable getTransformedAndLoad(int itemsAmount) {
+        this.extractor.extract();
+        itemRepository.saveAll(this.itemCreator.createItems(itemsAmount));
+        return itemRepository.findAll();
     }
 }

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 @Service
 public interface ItemService {
-    public Iterable<String> getExtractedBooks();
+    public Iterable getExtractedItems();
 
-    public Iterable<String> getTransformedBooks();
+    public Iterable getTransformedItems(int itemsAmount);
 
-    public Iterable getTransformedAndLoad();
+    public Iterable getTransformedAndLoad(int itemsAmount);
 
-    public void saveItem();
+    public void saveItem(int itemsAmount);
 }

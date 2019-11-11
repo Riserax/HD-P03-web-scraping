@@ -30,7 +30,8 @@ public class ItemCreator implements Serializable {
         this.htmlItems = htmlItems;
     }
 
-    public List<Item> createItem() {
+    public List<Item> createItems(int itemsAmount) {
+        int amount = itemsAmount < 11 ? 11 : itemsAmount;
         try {
             List<Item> items = new ArrayList<>();
             WebClient wc = new WebClient();
@@ -40,7 +41,7 @@ public class ItemCreator implements Serializable {
             if (!htmlItems.isEmpty()) {
                 int count = 0; // TODO zrobić na parametr do wyboru użytkownikowi
                 for (HtmlElement htmlItem : htmlItems) {
-                    if (count < 5) {
+                    if (count < amount) {
                         HtmlAnchor itemAnchor = htmlItem.getFirstByXPath(".//div[@class='book-info-middle']/h3/a");
                         String itemUrl = "https:" + itemAnchor.getHrefAttribute();
                         HtmlPage itemHtmlPage = wc.getPage(itemUrl);

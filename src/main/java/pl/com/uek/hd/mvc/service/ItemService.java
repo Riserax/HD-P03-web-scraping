@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 @Service
 public interface ItemService {
-    void reduceTransformedItems();
 
     Iterable getExtractedItems();
 

@@ -9,7 +9,6 @@ public class Opinion {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long opinionId;
-
     private Integer rate;
     private String author;
     private String date;

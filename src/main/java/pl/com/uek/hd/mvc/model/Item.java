@@ -9,9 +9,8 @@ import java.util.List;
 @Table(name = "items")
 public class Item {
    @Id
-   @Column(name = "id")
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private long itemId;
+   @Column(name = "isbn", length = 14)
+   private String itemISBN;
    private boolean bookAvailable;
    private BigDecimal bookPriceOld;
    private BigDecimal bookPrice;
@@ -74,9 +73,9 @@ public class Item {
       return book;
    }
 
-   public long getItemId() { return itemId; }
+   public String getItemId() { return itemISBN; }
 
-   public void setItemId(long itemId) { this.itemId = itemId; }
+   public void setItemId(String itemId) { this.itemISBN = itemId; }
 
    public void setBook(Book book) {
       this.book = book;
@@ -215,11 +214,11 @@ public class Item {
    private Book book;
 
    @OneToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
-   @JoinColumn(name = "items_id")
+   @JoinColumn(name = "items_isbn")
    private List<Opinion> opinions;
 
    @OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-   @JoinColumn(name = "items_id")
+   @JoinColumn(name = "items_isbn")
    private List<Review> reviews;
 
 }

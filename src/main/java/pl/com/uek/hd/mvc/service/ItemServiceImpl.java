@@ -40,22 +40,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
-    //todo zrobic, tak zeby usuwalo te itemy, ktore juz sa w BD, jak narazie nie dziala
-    @Override
-    public void reduceTransformedItems() {
-        Iterable<Item> itemsInDB = itemRepository.findAll();
-        for(Item itemInDb : transformedItems) {
-            System.out.println(itemInDb.getBook().getISBN());
-            for (Item transformedItem : itemsInDB) {
-                System.out.println(transformedItem.getBook().getISBN());
-                if (itemInDb.getBook().getISBN() == transformedItem.getBook().getISBN()) {
-                    this.transformedItems.remove(transformedItem.getItemId());
-                    System.out.println("rozmiar: " + this.transformedItems.size());
-                }
-            }
-        }
-    }
-
     @Override
     public Iterable getExtractedItems() {
         this.extractor.extract();
@@ -73,8 +57,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Iterable getLoadedItems() {
-        reduceTransformedItems();
         itemRepository.saveAll(transformedItems);
+        this.extractedItemsNodes = new ArrayList<>();
+        this.extractedItems = new ArrayList<>();
+        this.transformedItems = new ArrayList<>();
         return itemRepository.findAll();
     }
 
@@ -86,8 +72,10 @@ public class ItemServiceImpl implements ItemService {
         this.itemCreator.setHtmlItems(this.extractedItems);
         this.transformedItems = this.itemCreator.createItems(itemsAmount);
         itemRepository.saveAll(transformedItems);
+        this.extractedItemsNodes = new ArrayList<>();
+        this.extractedItems = new ArrayList<>();
+        this.transformedItems = new ArrayList<>();
         return itemRepository.findAll();
     }
-
 
 }

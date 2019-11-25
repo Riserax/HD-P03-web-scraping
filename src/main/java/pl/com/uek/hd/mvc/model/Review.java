@@ -9,7 +9,6 @@ public class Review {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long reviewId;
-
     private String organization;
     private String author;
     private String date;

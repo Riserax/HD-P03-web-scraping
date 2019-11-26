@@ -1,5 +1,6 @@
 package pl.com.uek.hd.mvc.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
@@ -56,7 +57,27 @@ public class ItemController {
     public void deleteAllItems(){
         itemService.deleteAllItems();
     }
+    @GetMapping(value = "/getSingleBookJSON/{id}", produces = "text/json")
+    public void getSingleBookJSON(@PathVariable("id") long id, HttpServletResponse response){
+        Item item = (Item)itemService.getItemById(id).get();
+        String fileName = "item.json";
 
+        response.setContentType("text/json");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + fileName + "\"");
+        ObjectMapper om = new ObjectMapper();
+
+        String jsonString = null;
+        try {
+            jsonString = om.writeValueAsString(item);
+            response.getWriter().write(jsonString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
     @GetMapping(value = "/getSingleBookCSV/{id}", produces = "text/csv")
     public void getSingleBookCSV(@PathVariable("id") long bookId, HttpServletResponse response){
         String fileName = "item.csv";

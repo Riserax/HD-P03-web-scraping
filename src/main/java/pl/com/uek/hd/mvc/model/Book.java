@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Book {
     @Id
     @Column(length = 14)
-    private String ISBN;
+    private Long ISBN;
     private String title;
     private String author;
     private String publisher;
@@ -26,7 +26,7 @@ public class Book {
     public Book() {
     }
 
-    public Book(String ISBN, String title, String author, String publisher, Integer numberOfPages, String cover, String originalTitle, String translator, String publishingDate, String format, String catalogNumber) {
+    public Book(Long ISBN, String title, String author, String publisher, Integer numberOfPages, String cover, String originalTitle, String translator, String publishingDate, String format, String catalogNumber) {
         this.ISBN = ISBN;
         this.title = title;
         this.author = author;
@@ -96,11 +96,11 @@ public class Book {
         this.translator = translator;
     }
 
-    public String getISBN() {
+    public Long getISBN() {
         return ISBN;
     }
 
-    public void setISBN(String ISBN) {
+    public void setISBN(Long ISBN) {
         this.ISBN = ISBN;
     }
 

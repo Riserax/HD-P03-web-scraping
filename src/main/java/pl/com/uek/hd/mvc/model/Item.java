@@ -13,7 +13,7 @@ import java.util.List;
 public class Item {
    @Id
    @Column(name = "isbn", length = 14)
-   private String itemISBN;
+   private Long itemISBN;
    private boolean bookAvailable;
    private BigDecimal bookPriceOld;
    private BigDecimal bookPrice;
@@ -76,9 +76,9 @@ public class Item {
       return book;
    }
 
-   public String getItemId() { return itemISBN; }
+   public Long getItemId() { return itemISBN; }
 
-   public void setItemId(String itemId) { this.itemISBN = itemId; }
+   public void setItemId(Long itemId) { this.itemISBN = itemId; }
 
    public void setBook(Book book) {
       this.book = book;

@@ -4,9 +4,13 @@ import org.springframework.stereotype.Service;
 import pl.com.uek.hd.mvc.model.Item;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public interface ItemService {
+
+    Optional getItemById(long id);
+
     Iterable getBooks();
 
     Iterable getExtractedItems();

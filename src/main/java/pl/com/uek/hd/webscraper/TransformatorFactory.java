@@ -125,7 +125,7 @@ public class TransformatorFactory {
                             book.setCover(bookAvailable ? bookCover.asText() : null);
                             book.setOriginalTitle(bookOrigTitle);
                             book.setTranslator(bookTranslator);
-                            book.setISBN(bookISBN);
+                            book.setISBN(Long.valueOf(bookISBN));
                             book.setCatalogNumber(bookCatalogNr);
                             book.setPublishingDate(bookPublishDate);
                             book.setFormat(bookFormat);

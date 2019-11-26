@@ -13,6 +13,7 @@ import pl.com.uek.hd.webscraper.ItemCreator;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +42,11 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.deleteAll();
     }
 
+
+    @Override
+    public Optional<Item> getItemById(long id) {
+        return itemRepository.findById(id);
+    }
 
     @Override
     public Iterable getBooks() {

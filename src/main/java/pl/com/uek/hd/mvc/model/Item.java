@@ -1,6 +1,9 @@
 package pl.com.uek.hd.mvc.model;
 
 
+import com.opencsv.bean.CsvBindAndJoinByName;
+import com.opencsv.bean.CsvBindAndSplitByName;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;

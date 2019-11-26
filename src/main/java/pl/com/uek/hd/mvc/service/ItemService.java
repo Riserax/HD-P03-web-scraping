@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 @Service
 public interface ItemService {
+    Iterable getBooks();
 
     Iterable getExtractedItems();
 

@@ -29,19 +29,10 @@ public class ItemServiceImpl implements ItemService {
     List<Item> transformedItems = new ArrayList<>();
     ItemCreator itemCreator = new ItemCreator();
 
-    public void saveItem(int itemsAmount){
-        this.extractor.extract();
-        this.itemCreator.setHtmlItems(this.extractor.getHtmlItems());
-        List<Item> item = this.itemCreator.createItems(itemsAmount);
-        System.out.println(item.size());
-        itemRepository.save(item.get(1));
-    }
-
     @Override
     public void deleteAllItems() {
         itemRepository.deleteAll();
     }
-
 
     @Override
     public Optional<Item> getItemById(long id) {
@@ -61,9 +52,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Iterable getExtractedItems() {
-        this.extractor.extract();
-        this.extractedItemsNodes = this.extractor.getExtractedItemsNodes();
-        this.extractedItems = this.extractor.getHtmlItems();
+        if(extractedItemsNodes.isEmpty()){
+            this.extractor.extract();
+            this.extractedItemsNodes = this.extractor.getExtractedItemsNodes();
+            this.extractedItems = this.extractor.getHtmlItems();
+        }
         return extractedItemsNodes;
     }
 

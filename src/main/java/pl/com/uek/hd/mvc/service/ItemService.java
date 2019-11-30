@@ -21,8 +21,6 @@ public interface ItemService {
 
     Iterable getExtractedTransformedAndLoadedItems(int itemsAmount);
 
-    void saveItem(int itemsAmount);
-
     void deleteAllItems();
 
 

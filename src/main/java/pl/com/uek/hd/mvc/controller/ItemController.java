@@ -27,11 +27,6 @@ public class ItemController {
     @Autowired
     ItemService itemService;
 
-    @GetMapping("/saveItem/{amount}")
-    public void saveItem(@PathVariable("amount") int amount){
-        itemService.saveItem(amount);
-    }
-
     @GetMapping("/getExtractedItems")
     public Iterable getExtractedBooks(){
         return itemService.getExtractedItems();

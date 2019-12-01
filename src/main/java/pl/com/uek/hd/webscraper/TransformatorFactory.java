@@ -31,8 +31,6 @@ public class TransformatorFactory {
     }
 
     private class BookTransformator implements Transformator<Book>{
-
-
         @Override
         public Book transform(HtmlElement htmlElement){
             try {
@@ -41,101 +39,99 @@ public class TransformatorFactory {
                 wc.getOptions().setJavaScriptEnabled(false);
 
                 if (htmlElement != null) {
+                    HtmlAnchor itemAnchor = htmlElement.getFirstByXPath(".//div[@class='book-info-middle']/h3/a");
+                    String itemUrl = "https:" + itemAnchor.getHrefAttribute();
+                    HtmlPage itemHtmlPage = wc.getPage(itemUrl);
 
-                            HtmlAnchor itemAnchor = htmlElement.getFirstByXPath(".//div[@class='book-info-middle']/h3/a");
-                            String itemUrl = "https:" + itemAnchor.getHrefAttribute();
-                            HtmlPage itemHtmlPage = wc.getPage(itemUrl);
+                    //BOOK
+                    HtmlElement bookTitle = itemHtmlPage.getFirstByXPath(".//div[@class='title-group']/h1/span[1]");
+                    HtmlAnchor bookAuthor = itemHtmlPage.getFirstByXPath(".//dl[@class='author']/dd/a");
+                    HtmlAnchor bookPublisher = itemHtmlPage.getFirstByXPath(".//div[@class='select_druk']/dd/a");
+                    HtmlElement bookPages = itemHtmlPage.getFirstByXPath(".//dl[@class='info']/dd[2]");
+                    HtmlElement bookCover = itemHtmlPage.getFirstByXPath(".//dl[@class='info']/dd[last()-1]");
+                    List<HtmlElement> detailsTitles = itemHtmlPage.getByXPath("//div[@id='section6']/dl/dt");
+                    List<HtmlElement> detailsTexts = itemHtmlPage.getByXPath("//div[@id='section6']/dl/dd");
 
-                            //BOOK
-                            HtmlElement bookTitle = itemHtmlPage.getFirstByXPath(".//div[@class='title-group']/h1/span[1]");
-                            HtmlAnchor bookAuthor = itemHtmlPage.getFirstByXPath(".//dl[@class='author']/dd/a");
-                            HtmlAnchor bookPublisher = itemHtmlPage.getFirstByXPath(".//div[@class='select_druk']/dd/a");
-                            HtmlElement bookPages = itemHtmlPage.getFirstByXPath(".//dl[@class='info']/dd[2]");
-                            HtmlElement bookCover = itemHtmlPage.getFirstByXPath(".//dl[@class='info']/dd[last()-1]");
-                            List<HtmlElement> detailsTitles = itemHtmlPage.getByXPath("//div[@id='section6']/dl/dt");
-                            List<HtmlElement> detailsTexts = itemHtmlPage.getByXPath("//div[@id='section6']/dl/dd");
+                    // book and eBook prices
+                    HtmlElement bookPriceRegular = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/span");
+                    HtmlElement bookPriceOld = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/del");
+                    HtmlElement bookPriceSale = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/ins");
 
-                            // book and eBook prices
-                            HtmlElement bookPriceRegular = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/span");
-                            HtmlElement bookPriceOld = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/del");
-                            HtmlElement bookPriceSale = itemHtmlPage.getFirstByXPath(".//fieldset[@id='box_druk']/p[@class='book-price']/ins");
+                    // ITEM
+                    List<HtmlElement> itemTags = itemHtmlPage.getByXPath("//ul[@class='tags']/li");
+                    List<HtmlElement> itemRates = itemHtmlPage.getByXPath("//ul[@class='oceny']/li");
 
-                            // ITEM
-                            List<HtmlElement> itemTags = itemHtmlPage.getByXPath("//ul[@class='tags']/li");
-                            List<HtmlElement> itemRates = itemHtmlPage.getByXPath("//ul[@class='oceny']/li");
+                    // book details
+                    Map<Integer,String> detTitles = new HashMap<>();
+                    for (int i = 0; i < detailsTitles.size(); i++) {
+                        detTitles.put(i, detailsTitles.get(i).asText());
+                    }
 
-                            // book details
-                            Map<Integer,String> detTitles = new HashMap<>();
-                            for (int i = 0; i < detailsTitles.size(); i++) {
-                                detTitles.put(i, detailsTitles.get(i).asText());
+                    Map<Integer,String> detTexts = new HashMap<>();
+                    for (int i = 0; i < detailsTexts.size(); i++) {
+                        detTexts.put(i, detailsTexts.get(i).asText());
+                    }
+
+                    String bookOrigTitle = null;
+                    String bookTranslator = null;
+                    String bookISBN = null;
+                    String bookPublishDate = null;
+                    String bookFormat = null;
+                    String bookCatalogNr = null;
+
+                    for (int i = 0; i < detTitles.size(); i++) {
+                        if (detTexts.containsKey(i)) {
+                            switch (detTitles.get(i)) {
+                                case "Tytuł oryginału:":
+                                    bookOrigTitle = detTexts.get(i);
+                                    break;
+                                case "Tłumaczenie:":
+                                    bookTranslator = detTexts.get(i);
+                                    break;
+                                case "ISBN Książki drukowanej:":
+                                    bookISBN = detTexts.get(i).substring(19);
+                                    break;
+                                case "Data wydania książki drukowanej:":
+                                    bookPublishDate = detTexts.get(i);
+                                    break;
+                                case "Format:":
+                                    bookFormat = detTexts.get(i);
+                                    break;
+                                case "Numer z katalogu:":
+                                    bookCatalogNr = detTexts.get(i);
+                                    break;
                             }
+                        }
+                    }
 
-                            Map<Integer,String> detTexts = new HashMap<>();
-                            for (int i = 0; i < detailsTexts.size(); i++) {
-                                detTexts.put(i, detailsTexts.get(i).asText());
-                            }
+                    boolean bookSale = bookPriceOld != null && bookPriceSale != null;
+                    boolean bookAvailable = (bookPriceRegular != null && !bookPriceRegular.asText().equals("niedostępna"))
+                            || bookSale;
 
-                            String bookOrigTitle = null;
-                            String bookTranslator = null;
-                            String bookISBN = null;
-                            String bookPublishDate = null;
-                            String bookFormat = null;
-                            String bookCatalogNr = null;
+                    List<String> ratesList = new ArrayList<>();
+                    for (HtmlElement itemRate : itemRates) {
+                        ratesList.add(itemRate.asText().replace("\r\n", " - "));
+                    }
 
-                            for (int i = 0; i < detTitles.size(); i++) {
-                                if (detTexts.containsKey(i)) {
-                                    switch (detTitles.get(i)) {
-                                        case "Tytuł oryginału:":
-                                            bookOrigTitle = detTexts.get(i);
-                                            break;
-                                        case "Tłumaczenie:":
-                                            bookTranslator = detTexts.get(i);
-                                            break;
-                                        case "ISBN Książki drukowanej:":
-                                            bookISBN = detTexts.get(i).substring(19);
-                                            break;
-                                        case "Data wydania książki drukowanej:":
-                                            bookPublishDate = detTexts.get(i);
-                                            break;
-                                        case "Format:":
-                                            bookFormat = detTexts.get(i);
-                                            break;
-                                        case "Numer z katalogu:":
-                                            bookCatalogNr = detTexts.get(i);
-                                            break;
-                                    }
-                                }
-                            }
+                    Book book = new Book();
+                    // BOOK
+                    book.setTitle(bookTitle.asText());
+                    book.setAuthor(bookAuthor.asText());
+                    book.setPublisher(bookPublisher.asText());
+                    book.setNumberOfPages(bookPages == null ? null : new Integer(bookPages.asText()));
+                    book.setCover(bookAvailable ? bookCover.asText() : null);
+                    book.setOriginalTitle(bookOrigTitle);
+                    book.setTranslator(bookTranslator);
+                    book.setISBN(Long.valueOf(bookISBN));
+                    book.setCatalogNumber(bookCatalogNr);
+                    book.setPublishingDate(bookPublishDate);
+                    book.setFormat(bookFormat);
 
-                            boolean bookSale = bookPriceOld != null && bookPriceSale != null;
-                            boolean bookAvailable = (bookPriceRegular != null && !bookPriceRegular.asText().equals("niedostępna"))
-                                    || bookSale;
-
-                            List<String> ratesList = new ArrayList<>();
-                            for (HtmlElement itemRate : itemRates) {
-                                ratesList.add(itemRate.asText().replace("\r\n", " - "));
-                            }
-
-                            Book book = new Book();
-                            // BOOK
-                            book.setTitle(bookTitle.asText());
-                            book.setAuthor(bookAuthor.asText());
-                            book.setPublisher(bookPublisher.asText());
-                            book.setNumberOfPages(bookPages == null ? null : new Integer(bookPages.asText()));
-                            book.setCover(bookAvailable ? bookCover.asText() : null);
-                            book.setOriginalTitle(bookOrigTitle);
-                            book.setTranslator(bookTranslator);
-                            book.setISBN(Long.valueOf(bookISBN));
-                            book.setCatalogNumber(bookCatalogNr);
-                            book.setPublishingDate(bookPublishDate);
-                            book.setFormat(bookFormat);
-
-                            return book;
+                    return book;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         return new Book();}
     }
 
@@ -152,12 +148,10 @@ public class TransformatorFactory {
                     String itemUrl = "https:" + itemAnchor.getHrefAttribute();
                     HtmlPage itemHtmlPage = wc.getPage(itemUrl);
 
-
                     // OPINION
                     List<HtmlElement> itemOpinions = itemHtmlPage.getByXPath("//div[@id='section4']/div[@class='list']/ol[@class='list']/li");
                     HtmlElement itemOpinionsNumber = itemHtmlPage.getFirstByXPath(".//h2[@class='votes-header-two']/span");
                     List<HtmlElement> itemRates = itemHtmlPage.getByXPath("//ul[@class='oceny']/li");
-
 
                     boolean opinionsAvailable = itemOpinionsNumber != null;
 
@@ -165,7 +159,6 @@ public class TransformatorFactory {
                     for (HtmlElement itemRate : itemRates) {
                         ratesList.add(itemRate.asText().replace("\r\n", " - "));
                     }
-
 
                     // OPINION
                     List<Opinion> opinionsList = new ArrayList<>();
@@ -222,9 +215,6 @@ public class TransformatorFactory {
                     // REVIEW
                     List<HtmlElement> itemReviews = itemHtmlPage.getByXPath("//div[@id='section5']/ol[@class='list']/li");
 
-
-
-
                     // REVIEW
                     List<Review> reviewsList = new ArrayList<>();
                     int rewiewsCount = 0; // TODO usunąć na produkcji
@@ -236,11 +226,19 @@ public class TransformatorFactory {
                             HtmlElement opinionText = itemReview.getFirstByXPath(".//blockquote");
 
                             String organization = reviewOrganization == null ? null : reviewOrganization.asText();
-                            String author = organization != null ?
-                                    StringUtils.substring(reviewAuthorAndDate.asText(),organization.length()+1,reviewAuthorAndDate.asText().length()-12)
-                                    : StringUtils.substring(reviewAuthorAndDate.asText(),1,reviewAuthorAndDate.asText().length()-12);
                             String date = StringUtils.substring(reviewAuthorAndDate.asText(),
                                     reviewAuthorAndDate.asText().length()-10, reviewAuthorAndDate.asText().length());
+                            String author;
+                            if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                                author = organization != null ?
+                                        StringUtils.substring(reviewAuthorAndDate.asText(), organization.length() + 1, reviewAuthorAndDate.asText().length() - 12)
+                                        : StringUtils.substring(reviewAuthorAndDate.asText(), 1, reviewAuthorAndDate.asText().length() - 12);
+                            } else {
+                                author = organization != null ?
+                                        StringUtils.substring(reviewAuthorAndDate.asText(), organization.length() + 1)
+                                        : StringUtils.substring(reviewAuthorAndDate.asText(), 1);
+                                date = null;
+                            }
 
                             review.setOrganization(organization);
                             review.setAuthor(author);
@@ -258,6 +256,4 @@ public class TransformatorFactory {
             }
         return new ArrayList<>(); }
     }
-
-
 }

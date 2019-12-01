@@ -1,6 +1,5 @@
 package pl.com.uek.hd.mvc.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
@@ -15,11 +14,8 @@ import pl.com.uek.hd.mvc.model.Item;
 import pl.com.uek.hd.mvc.service.ItemService;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -42,7 +38,6 @@ public class ItemController {
         return itemService.getLoadedItems();
     }
 
-
     @GetMapping("/getExtractedTransformedAndLoadedItems/{amount}")
     public Iterable getExtractedTransformedAndLoadedItems(@PathVariable("amount") int amount){
         return itemService.getExtractedTransformedAndLoadedItems(amount);
@@ -52,6 +47,7 @@ public class ItemController {
     public void deleteAllItems(){
         itemService.deleteAllItems();
     }
+
     @GetMapping(value = "/getSingleBookJSON/{id}", produces = "text/json")
     public void getSingleBookJSON(@PathVariable("id") long id, HttpServletResponse response){
         Item item = (Item)itemService.getItemById(id).get();
@@ -69,10 +65,8 @@ public class ItemController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
     }
+
     @GetMapping(value = "/getSingleBookCSV/{id}", produces = "text/csv")
     public void getSingleBookCSV(@PathVariable("id") long bookId, HttpServletResponse response){
         String fileName = "item.csv";
@@ -80,7 +74,6 @@ public class ItemController {
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + fileName + "\"");
-
 
         try {
             StatefulBeanToCsv<Book> csvWriter = new StatefulBeanToCsvBuilder<Book>(response.getWriter())
@@ -106,9 +99,6 @@ public class ItemController {
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + fileName + "\"");
-
-
-
         try {
             StatefulBeanToCsv<Item> csvWriter = new StatefulBeanToCsvBuilder<Item>(response.getWriter())
                     .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)

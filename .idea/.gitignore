@@ -1,0 +1,5 @@
+# Default ignored files
+/workspace.xml
+../target/**
+
+src/main/resources/application.properties

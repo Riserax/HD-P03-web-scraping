@@ -54,8 +54,8 @@ public class ItemServiceImpl implements ItemService {
     public Iterable getExtractedItems() {
         if(extractedItemsNodes.isEmpty()){
             this.extractor.extract();
-            this.extractedItemsNodes = this.extractor.getExtractedItemsNodes();
-            this.extractedItems = this.extractor.getHtmlItems();
+            this.extractedItemsNodes.addAll(this.extractor.getExtractedItemsNodes());
+            this.extractedItems.addAll(this.extractor.getHtmlItems());
         }
         return extractedItemsNodes;
     }
@@ -63,30 +63,30 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Iterable getTransformedItems(int itemsAmount) {
         this.itemCreator.setHtmlItems(this.extractedItems);
-        this.transformedItems = this.itemCreator.createItems(itemsAmount);
+        this.transformedItems.addAll(this.itemCreator.createItems(itemsAmount));
         return transformedItems;
     }
 
     @Override
     public Iterable getLoadedItems() {
         itemRepository.saveAll(transformedItems);
-        this.extractedItemsNodes = new ArrayList<>();
-        this.extractedItems = new ArrayList<>();
-        this.transformedItems = new ArrayList<>();
+        this.extractedItemsNodes.removeAll(extractedItemsNodes);
+        this.extractedItems.removeAll(extractedItems);
+        this.transformedItems.removeAll(transformedItems);
         return itemRepository.findAll();
     }
 
     @Override
     public Iterable getExtractedTransformedAndLoadedItems(int itemsAmount) {
         this.extractor.extract();
-        this.extractedItemsNodes = this.extractor.getExtractedItemsNodes();
-        this.extractedItems = this.extractor.getHtmlItems();
+        this.extractedItemsNodes.addAll(this.extractor.getExtractedItemsNodes());
+        this.extractedItems.addAll(this.extractor.getHtmlItems());
         this.itemCreator.setHtmlItems(this.extractedItems);
         this.transformedItems = this.itemCreator.createItems(itemsAmount);
         itemRepository.saveAll(transformedItems);
-        this.extractedItemsNodes = new ArrayList<>();
-        this.extractedItems = new ArrayList<>();
-        this.transformedItems = new ArrayList<>();
+        this.extractedItemsNodes.removeAll(extractedItemsNodes);
+        this.extractedItems.removeAll(extractedItems);
+        this.transformedItems.removeAll(transformedItems);
         return itemRepository.findAll();
     }
 

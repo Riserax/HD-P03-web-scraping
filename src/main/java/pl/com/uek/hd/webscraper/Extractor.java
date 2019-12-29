@@ -87,7 +87,7 @@ public class Extractor {
 
 
         try {
-            if (!htmlItems.isEmpty()) {
+            if (!htmlItems.isEmpty() && extractedItemsNodes.isEmpty()) {
                 for (HtmlElement htmlItem : htmlItems) {
                     System.out.println(htmlItem.asXml());
                     TemporaryItem temporaryItem = new TemporaryItem();
